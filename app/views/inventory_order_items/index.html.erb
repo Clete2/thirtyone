@@ -1,0 +1,31 @@
+<h1>Listing inventory_order_items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Orderid</th>
+      <th>Itemid</th>
+      <th>Quantity</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventory_order_items.each do |inventory_order_item| %>
+      <tr>
+        <td><%= inventory_order_item.orderid %></td>
+        <td><%= inventory_order_item.itemid %></td>
+        <td><%= inventory_order_item.quantity %></td>
+        <td><%= link_to 'Show', inventory_order_item %></td>
+        <td><%= link_to 'Edit', edit_inventory_order_item_path(inventory_order_item) %></td>
+        <td><%= link_to 'Destroy', inventory_order_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory order item', new_inventory_order_item_path %>

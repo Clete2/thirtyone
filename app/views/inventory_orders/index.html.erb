@@ -1,0 +1,31 @@
+<h1>Listing inventory_orders</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Peopleid</th>
+      <th>Enteredby</th>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventory_orders.each do |inventory_order| %>
+      <tr>
+        <td><%= inventory_order.peopleid %></td>
+        <td><%= inventory_order.enteredby %></td>
+        <td><%= inventory_order.date %></td>
+        <td><%= link_to 'Show', inventory_order %></td>
+        <td><%= link_to 'Edit', edit_inventory_order_path(inventory_order) %></td>
+        <td><%= link_to 'Destroy', inventory_order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory order', new_inventory_order_path %>

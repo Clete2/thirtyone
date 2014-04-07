@@ -1,0 +1,2 @@
+module InventoryStockRecordsHelper
+end

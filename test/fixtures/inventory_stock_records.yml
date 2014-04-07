@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: inventory_stock_records
+#
+#  id         :integer          not null, primary key
+#  itemid     :integer
+#  quantity   :integer
+#  received   :date
+#  created_at :datetime
+#  updated_at :datetime
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  itemid: 1
+  quantity: 1
+  received: 2014-04-06
+
+two:
+  itemid: 1
+  quantity: 1
+  received: 2014-04-06

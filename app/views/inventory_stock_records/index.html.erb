@@ -1,0 +1,31 @@
+<h1>Listing inventory_stock_records</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Itemid</th>
+      <th>Quantity</th>
+      <th>Received</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventory_stock_records.each do |inventory_stock_record| %>
+      <tr>
+        <td><%= inventory_stock_record.itemid %></td>
+        <td><%= inventory_stock_record.quantity %></td>
+        <td><%= inventory_stock_record.received %></td>
+        <td><%= link_to 'Show', inventory_stock_record %></td>
+        <td><%= link_to 'Edit', edit_inventory_stock_record_path(inventory_stock_record) %></td>
+        <td><%= link_to 'Destroy', inventory_stock_record, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory stock record', new_inventory_stock_record_path %>

@@ -11,7 +11,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140304043008) do
+ActiveRecord::Schema.define(version: 20140406183941) do
+
+  create_table "events", force: true do |t|
+    t.string   "name"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inventory_items", force: true do |t|
+    t.string   "name"
+    t.integer  "quantity"
+    t.string   "barcode"
+    t.string   "unit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inventory_order_items", force: true do |t|
+    t.integer  "orderid"
+    t.integer  "itemid"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inventory_orders", force: true do |t|
+    t.integer  "peopleid"
+    t.integer  "enteredby"
+    t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inventory_stock_records", force: true do |t|
+    t.integer  "itemid"
+    t.integer  "quantity"
+    t.date     "received"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "people", force: true do |t|
     t.string   "firstname"

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Peopleid:</strong>
+  <%= @inventory_order.peopleid %>
+</p>
+
+<p>
+  <strong>Enteredby:</strong>
+  <%= @inventory_order.enteredby %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @inventory_order.date %>
+</p>
+
+<%= link_to 'Edit', edit_inventory_order_path(@inventory_order) %> |
+<%= link_to 'Back', inventory_orders_path %>
