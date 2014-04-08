@@ -10,15 +10,24 @@ class InventoryItemsController < ApplicationController
   # GET /inventory_items/1
   # GET /inventory_items/1.json
   def show
+    if params[:ajax]
+      render :partial => 'show'
+    end
   end
 
   # GET /inventory_items/new
   def new
     @inventory_item = InventoryItem.new
+    if params[:ajax]
+      render :partial => 'new'
+    end
   end
 
   # GET /inventory_items/1/edit
   def edit
+    if params[:ajax]
+      render :partial => 'edit'
+    end
   end
 
   # POST /inventory_items

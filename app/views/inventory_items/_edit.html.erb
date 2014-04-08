@@ -1,0 +1,25 @@
+<h1>Editing <%= @inventory_item.name %></h1>
+
+<%= render 'form' %>
+
+<div class="row">
+  <div class="left">
+    <button class="tiny" onclick="$('#edit_inventory_item_<%= @inventory_item.id %>').submit();">Save</button>
+    <button class="tiny" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</button>
+  </div>
+<div class="right">
+  <button class="tiny" onclick="if ( confirm('Are you sure you want to completely remove <%= @inventory_item.name %> from your inventory?') ) {
+          var request = $.ajax({
+                  url: '<%= inventory_item_path(@inventory_item.id) %>',
+                  type: 'DELETE',
+                  dataType: 'json'
+                  });
+          request.done(function(msg) {
+                  window.location.href = '<%= inventory_items_path %>'
+                  });
+          request.fail(function( jqXHR, textStatus) {
+                  alert('Delete failed with message: ' + textStatus);
+           });
+          }">Remove from Inventory</button>
+</div>
+</div>

@@ -1,0 +1,26 @@
+<h1>New Inventory Item</h1>
+
+<%= render 'form' %>
+
+<button id="save_button" class="tiny" onclick="
+        var form = $('#new_inventory_item');
+        var request = $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+            dataType: 'json'
+        });
+        request.done(function(msg) {
+                window.location.href = '<%= inventory_items_path %>'
+                });
+        request.fail(function( jqXHR, textStatus) {
+                alert('Delete failed with message: ' + textStatus);
+                });
+">Save</button>
+<button class="tiny" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</button>
+<script>
+    $("#new_inventory_item").on('keypress', 'input', function(e) {
+        if(e.which == 13)
+            $("#save_button").click();
+    });
+</script>

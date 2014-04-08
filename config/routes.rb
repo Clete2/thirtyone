@@ -1,13 +1,16 @@
 Thirtyone::Application.routes.draw do
 
 
-  resources :inventory_orders
+  scope 'inventory' do
+    resources :items, as: 'inventory_items', controller: 'inventory_items'
+    resources :orders, controller: 'inventory_orders'
 
-  resources :inventory_order_items
+    #TODO: Need to figure out what to name this
+    resources :inventory_stock_records
+  end
 
-  resources :inventory_stock_records
 
-  resources :inventory_items
+
 
   root  'static_pages#index'
 

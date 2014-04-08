@@ -1204,3 +1204,13 @@
     }
    }
 }
+
+.row-link:hover  {
+  background-color: #008CBA;
+  cursor: pointer;
+  td { color:#ffffff; }
+}
+
+table {
+  border-collapse: collapse;
+}

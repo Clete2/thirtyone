@@ -1,33 +1,40 @@
-<h1>Listing inventory_items</h1>
-
+<div class="row">
+  <div class="large-8 small-10 columns small-centered">
+<h1>Current Inventory</h1>
+<div id="editInventoryModal" class="reveal-modal" data-reveal>
+</div>
+<script>
+$('#editInventoryModal').foundation('reveal',{
+    close_on_background_click: false,
+    animation: 'none'
+});
+</script>
 <table>
+
   <thead>
     <tr>
       <th>Name</th>
       <th>Quantity</th>
-      <th>Barcode</th>
       <th>Unit</th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>Barcode</th>
     </tr>
   </thead>
 
   <tbody>
     <% @inventory_items.each do |inventory_item| %>
-      <tr>
+      <a><tr class="row-link" onclick="$('#editInventoryModal').foundation('reveal', 'open', {url: '<%= edit_inventory_item_path(inventory_item.id) %>', data: {ajax: true}});">
         <td><%= inventory_item.name %></td>
         <td><%= inventory_item.quantity %></td>
-        <td><%= inventory_item.barcode %></td>
         <td><%= inventory_item.unit %></td>
-        <td><%= link_to 'Show', inventory_item %></td>
-        <td><%= link_to 'Edit', edit_inventory_item_path(inventory_item) %></td>
-        <td><%= link_to 'Destroy', inventory_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= inventory_item.barcode %></td>
       </tr>
+      </a>
     <% end %>
   </tbody>
 </table>
 
 <br>
 
-<%= link_to 'New Inventory item', new_inventory_item_path %>
+<button onclick="$('#editInventoryModal').foundation('reveal', 'open', {url: '<%= new_inventory_item_path %>', data: {ajax: true}});">New Item</button>
+  </div>
+</div>
