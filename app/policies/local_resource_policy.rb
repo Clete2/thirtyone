@@ -26,4 +26,8 @@ class LocalResourcePolicy < ApplicationPolicy
   def destroy?
     @user.has_access?(PERM_RW_USER)
   end
+
+  def search?
+    show?
+  end
 end

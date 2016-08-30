@@ -7,6 +7,5 @@ before_script:
  # Migrate and seed the database
  - rake db:setup
 
-# TODO: Remove this once tests are working. Setting script to true just disables tests.
 script:
- - true
+ - rake spec

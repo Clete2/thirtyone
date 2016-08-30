@@ -16,3 +16,56 @@
 .button_to div {
   display: inline;
 }
+
+.phone_field {
+  .phone_left {
+    display: inline-block;
+    width: 40%;
+  }
+  .phone_right {
+    display: inline-block;
+    width: 40%;
+  }
+}
+
+.page-header {
+  font-size: 2.5em;
+  letter-spacing: 1.5px;
+  font-weight: 400;
+}
+
+.looks-clickable {
+  cursor: pointer;
+}
+
+.table-header {
+  font-size: 1.2em;
+  font-weight: 600;
+  background-color: #cecece;
+  border-radius: 4px;
+  padding: 1em .75em;
+}
+
+.table-row {
+  font-size: 1.1em;
+  font-weight: 400;
+  border-radius: 4px;
+  padding: .75em .5em;
+
+  &:nth-child(odd) {
+    background-color: #ececec;
+  }
+}
+
+.layout-wrapper {
+  border: none;
+  margin: 0em;
+  padding: 0em;
+  background: rgba(0, 0, 0, 0.0); /* Transparent */
+  tr {
+    background: rgba(0, 0, 0, 0.0) !important; /* Transparent */
+  }
+  td {
+    padding: 0em;
+  }
+}

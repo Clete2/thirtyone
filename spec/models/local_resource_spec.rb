@@ -3,7 +3,6 @@
 # Table name: local_resources
 #
 #  id            :integer          not null, primary key
-#  contact_name  :string
 #  business_name :string
 #  phone         :string
 #  email         :string

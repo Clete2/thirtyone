@@ -9,7 +9,7 @@
 
     <p>
       <strong>Phone:</strong>
-      <%= @local_resource.phone %>
+      <%= number_to_phone(@local_resource.phone, area_code: true, extension: @local_resource.phone_ext)%>
     </p>
 
     <p>

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: note_types
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require 'rails_helper'
 
 describe NoteType do

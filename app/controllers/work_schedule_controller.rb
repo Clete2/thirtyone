@@ -1,4 +1,5 @@
 class WorkScheduleController < ApplicationController
+  before_action :set_work_schedule, only: [:update, :edit, :show, :destroy]
   before_action :authorize_work_schedule
 
   @@date_format = '%Y-%m-%d'
@@ -19,26 +20,18 @@ class WorkScheduleController < ApplicationController
   end
 
   def update
-    @work_schedule = WorkSchedule.find(params[:id])
     populate_work_schedule()
   end
 
   def edit
-    @work_schedule = WorkSchedule.find(params[:id])
-  end
-
-  def delete
-
   end
 
   def show
-    @work_schedule = WorkSchedule.find(params[:id])
     @users = User.all
   end
 
   def destroy
-    @work_schedule = WorkSchedule.all
-    @work_schedule.destroy(params[:id])
+    @work_schedule.destroy
     respond_to do |format|
       format.html { redirect_to calendar_index_url }
       format.json { head :no_content }
@@ -74,6 +67,11 @@ class WorkScheduleController < ApplicationController
       flash.now[:alert] = @@staff_invalid_error
       render action: 'new'
     end
+  end
+
+  def set_work_schedule
+    @work_schedule = WorkSchedule.find_by(id: params[:id])
+    redirect_to action: 'index' unless @work_schedule
   end
 
   def authorize_work_schedule

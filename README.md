@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/matthew6project/thirtyone.svg?branch=master)](https://travis-ci.org/matthew6project/thirtyone)
+
 Matthew 6:31
 =====================
 <i>Therefore do not be anxious, saying, 'What shall we eat?' or 'What shall we drink?' or 'What shall we wear?'</i>

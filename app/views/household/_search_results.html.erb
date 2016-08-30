@@ -7,7 +7,15 @@
         rowclass += 'last-element' if index == @households.length - 1
       %>
 
-      <li onclick="App.Household.selectHousehold(this, '<%= household_url(household) %>');" class="<%= rowclass %>">
+      <li
+        <% if defined? action == 'merge_household' %>
+          onclick="window.location = 'merge/<%= household.id %>';"
+        <% elsif defined? person_select == true %>
+          onclick="App.Household.selectHousehold(this, '<%= household_url(household) %>');"
+        <% else %>
+          onclick="window.location = '<%= url_for household_path(household) %>';"
+        <% end %>
+      class="<%= rowclass %>">
           <div><%= household.summary %></div>
           <input type="hidden" name="household_summary" value="<%= household.summary %>" />
           <input type="hidden" name="household_id" value="<%= household.id %>" />

@@ -18,9 +18,9 @@
     render "static_pages/unauthTopnav"
   end %>
 
-  <div id="notice" class="row" style="display:none;">
-    <div id="notice_content" class="large-6 radius large-centered columns alert-box success">
     <% if notice %>
+          <div class="row">
+            <div data-alert class="large-6 columns space-above radius large-centered alert-box success">
         <% if notice.is_a?(Array)
              notice.each do |n|%>
                <%= n %><br />
@@ -29,36 +29,26 @@
         <% else %>
             <%= notice %>
         <% end %>
-    <% end %>
-    </div>
-  </div>
-
-    <% if notice %>
-     <script type="text/javascript">
-          $("#notice").show().delay(3000).fadeOut(1000);
-      </script>
+              <a href="#" class="close">&times;</a>
+            </div>
+          </div>
     <% end %>
 
-    <div id="error" class="row" style="display:none;">
-      <div id="error_content" class="large-6 radius large-centered columns alert-box alert">
         <% if alert %>
-
-          <% if alert.is_a?(Array)
+            <div class="row">
+              <div data-alert class="large-6 columns space-above radius large-centered alert-box alert">
+            <% if alert.is_a?(Array)
                alert.each do |n|%>
                   <%= n %><br />
               <% end %>
 
-          <% else %>
+            <% else %>
               <%= alert %>
-          <% end %>
+            <% end %>
+                <a href="#" class="close">&times;</a>
+              </div>
+            </div>
         <% end %>
-      </div>
-    </div>
-    <% if alert %>
-      <script type="text/javascript">
-          $("#error").show().delay(3000).fadeOut(1000);
-      </script>
-    <% end %>
 
     <%= yield %>
   </body>

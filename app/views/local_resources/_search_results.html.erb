@@ -1,0 +1,38 @@
+<% @local_resource_categories.each do |local_resource_category| %>
+    <div class="row">
+      <div class="large-8 large-centered small-12 columns expand">
+        <div class="title dark-grey radius-top" style="padding-left:15px;">
+          <p><span class="toggle">▼</span> <%= local_resource_category.name %></p>
+        </div>
+      </div>
+      <div class="large-8 large-push-2 columns small-12 content radius-bottom end">
+        <div class="grey" style="padding-left:15px;">
+              <% @local_resources.includes(:local_resource_categories)
+                                 .where(local_resource_categories_resources: {local_resource_category_id: [local_resource_category.id]})
+                                 .each do |local_resource| %>
+              <strong><%= local_resource.business_name %></strong><br/>
+              <% unless local_resource.phone.blank? %>
+                  <span class="ui-icon ui-icon-contact icon"></span><%= number_to_phone(local_resource.phone, area_code: true, extension: local_resource.phone_ext) %><br/>
+              <% end %>
+              <% unless local_resource.address.blank? %>
+                  <span class="ui-icon ui-icon-pin-s icon"></span><%= link_to local_resource.address.oneline_summary,
+                                                                              "https://www.google.com/maps/place/#{local_resource.address.oneline_summary}" %>
+                  <br/>
+              <% end %>
+              <% unless local_resource.email.blank? %>
+                  <span class="ui-icon ui-icon-mail-closed icon"></span><%= mail_to local_resource.email %><br/>
+              <% end %>
+              <% unless local_resource.url.blank? %>
+                  <span class="ui-icon ui-icon-home icon"></span><%= link_to 'Website', local_resource.url, :target => '_blank' %><br/>
+              <% end %>
+              <%= link_to('Edit', edit_local_resource_path(local_resource)) if current_user.has_access?(PERM_RW_RESOURCE) %> |
+              <%= link_to('Delete', local_resource, :method => :delete, :data => {:confirm => 'Are you sure?'}) if current_user.has_access?(PERM_RW_RESOURCE) %><br/>
+              <% if not local_resource.equal? local_resource_category.local_resources.last %>
+                  <br/>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <br/>
+<% end %>

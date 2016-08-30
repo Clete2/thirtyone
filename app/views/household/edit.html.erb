@@ -1,5 +1,47 @@
-<div style="margin-top:20px;" class="row">
-  <div class="small-12 medium-8 large-8 columns small-centered">
-        <%= render 'edit' %>
+<%= form_for(@household) do |form| %>
+
+  <div style="margin-top:20px;" class="row">
+    <div class="small-12 medium-8 large-8 columns small-centered">
+      <%= render :partial => 'household/new', :locals => {:f => form} %>
+    </div>
   </div>
-</div>
+
+    <div class="row">
+      <div class="small-12 medium-8 large-8 columns small-centered">
+        <table id="household_limits_table" class="layout-wrapper">
+            <%= form.fields_for :household_limits do |builder| %>
+                <%= render 'household_limit_fields', :f => builder %>
+            <% end %>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 medium-8 large-8 columns small-centered">
+        <div class="small-12 columns">
+          <p><%= link_to_add_fields "Add Inventory Override", form, :household_limits, "#household_limits_table" %></p>
+        </div>
+      </div>
+    </div>
+
+  <div class="row">
+    <div class="large-8 small-12 columns small-centered">
+      <div class="small-12 columns">
+        <h3>Members</h3>
+        <% @household.members.each do |member| %>
+            <li><%= link_to member.formal_name, edit_person_path(member, :redirect_to_url => edit_household_path(@household)) %></li>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row space-above">
+    <div class="large-8 columns small-12 small-centered clearfix">
+      <div class="small-12 columns">
+        <%= form.submit 'Save', :class => 'medium button left' %>
+        <%= link_to("New Person", new_person_path(:household_id => @household.id, :redirect_to_url => edit_household_path(@household)), :class => 'button medium right') %>
+      </div>
+    </div>
+  </div>
+
+<% end %>

@@ -6,12 +6,23 @@ class LocalResourcesController < ApplicationController
   # GET /local_resources
   # GET /local_resources.json
   def index
+    @local_resources = LocalResource.all
     @local_resource_categories = LocalResourceCategory.all
   end
 
   # GET /local_resources/1
   # GET /local_resources/1.json
   def show
+  end
+
+  def search
+    @local_resources, @local_resource_categories = LocalResourceSearch.search(params)
+    respond_to do |format|
+      format.html {
+         render partial: 'search_results'
+      }
+      format.json { render action: 'index.json' }
+    end
   end
 
   # GET /local_resources/new
@@ -23,7 +34,7 @@ class LocalResourcesController < ApplicationController
   # GET /local_resources/1/edit
   def edit
     @state_id = @local_resource.address.state_id
-    @local_resource_categories = @local_resource.local_resource_categories.map {|c| "#{c.id}"}
+    @local_resource_categories = @local_resource.local_resource_categories.map(&:id)
   end
 
   # POST /local_resources
@@ -97,12 +108,13 @@ class LocalResourcesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_local_resource
-      @local_resource = LocalResource.find(params[:id])
+      @local_resource = LocalResource.find_by(id: params[:id])
+      redirect_to local_resources_url unless @local_resource
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def local_resource_params
-      params.require(:local_resource).permit(:contact_name, :business_name, :phone, :email, :url,
+      params.require(:local_resource).permit(:contact_name, :business_name, :phone, :phone_ext, :email, :url,
                                              address_attributes: [:line1, :line2, :city, :zip])
     end
 

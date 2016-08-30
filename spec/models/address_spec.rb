@@ -3,10 +3,10 @@
 # Table name: addresses
 #
 #  id         :integer          not null, primary key
-#  line1      :string(255)
-#  line2      :string(255)
-#  city       :string(255)
-#  zip        :string(255)
+#  line1      :string
+#  line2      :string
+#  city       :string
+#  zip        :string
 #  state_id   :integer
 #  created_at :datetime
 #  updated_at :datetime

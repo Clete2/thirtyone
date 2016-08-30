@@ -1,5 +1,19 @@
 <%= fields_for @household do |h| %>
-    <div class="field">
+
+    <% if @household.errors.any? %>
+        <div class="small-12 columns">
+          <div id="error_explanation">
+            <h2><%= pluralize(@household.errors.count, "error") %> prohibited this household from being saved:</h2>
+
+            <ul>
+              <% @household.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+    <% end %>
+
       <div class="small-12 columns">
         <label for="household_name">Household Name</label>
         <input disabled="disabled" type="text" id="household_summary" value="" />
@@ -20,9 +34,7 @@
             </div>
             <div class="field">
               <label for="household_address_state">State</label>
-              <select name="state[id]">
-                <%= options_from_collection_for_select(@all_states, :id, :name, selected: Address.most_used_state.id) %>
-              </select>
+              <%= a.collection_select :state_id, State.all, :id, :name %>
             </div>
             <div class="field">
               <label for="household_address_zip">Zipcode</label>
@@ -30,5 +42,4 @@
             </div>
         <% end %>
       </div>
-    </div>
 <% end %>

@@ -49,7 +49,7 @@ App.Household.selectHousehold = function(row, url) {
   $.ajax({url: url,
     data: {ajax: true}
   }).fail(function( jqXHR, textStatus, errorThrown ) {
-      alert("Sorry, a failure occured");
+      alert("Sorry, a failure occurred");
     })
     .done(function(data, status, xhr) {
       $('#selectHouseholdModal').foundation('reveal', 'close');
@@ -62,14 +62,55 @@ App.Household.newHouseholdAjax = function(url) {
   $.ajax({url: url,
     data: {ajax: true}
   }).fail(function( jqXHR, textStatus, errorThrown ) {
-      alert("Sorry, a failure occured");
+      alert("Sorry, a failure occurred");
     })
     .done(function(data, status, xhr) {
       $('#selectHouseholdModal').foundation('reveal', 'close');
       $('#household_div').html(data);
       $('#select_household_message').hide();
+      $("input#address_zip").inputmask("99999");
     });
 };
+
+App.Household.mergeMemberChecked = function(checkbox) {
+    var parent      = $(checkbox).closest('.member-wrap')
+    var deleted     = $(parent).find(".deleted");
+    var member_name = $(parent).find(".member-name")
+    var person_id   = $(checkbox).val();
+    var all_heads   = $("input[name='head_id']");
+    var head_radio  = $(all_heads).filter("[value='" + person_id + "']");
+    var head_row    = $(head_radio).closest('.row');
+
+    if ( checkbox.checked ) {
+        $(member_name).removeClass("red-text");
+        $(deleted).hide();
+        $(head_row).show();
+    } else {
+        /* If the member that was selected for deletion is the currently selected
+           head of household we need to verify that this is at least one other member
+           eligible for being the head of household and select the first we find, or send
+           the user an error telling them they cannot delete the last member of a household
+         */
+        if ( $(head_radio).prop('checked') ) {
+            $(all_heads).each(function (index, obj) {
+               if ( $(obj).val() != person_id && $(obj).is(":visible") ) {
+                   $(obj).prop('checked', true);
+                   return false;
+               }
+            });
+            /* We == 1 here because we haven't hidden the last head of household yet, which would mean
+               the total visible would == 0 if we let this go through */
+            if ( $(all_heads).filter(":visible").length == 1 ) {
+                alert("You cannot remove the last member of a household");
+                $(checkbox).prop("checked", true);
+                return;
+            }
+        }
+        $(member_name).addClass("red-text");
+        $(deleted).show();
+        $(head_row).hide();
+    }
+}
 
 $(document).ready(function() {
   if (!($("body.household").length > 0)) {

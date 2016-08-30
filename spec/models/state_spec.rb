@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: states
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  abbreviation :string
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 require 'rails_helper'
 
 describe State do

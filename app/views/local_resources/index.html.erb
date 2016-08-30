@@ -1,46 +1,33 @@
 <br/>
-<div class="row large-centered">
+<div class="row large-centered space-bottom">
   <div class="large-8 large-centered columns">
-    <a class="button tiny" href="<%= new_local_resource_path %>">New Local Resource</a>
+    <a class="button medium" href="<%= new_local_resource_path %>">New Local Resource</a>
   </div>
 </div>
-<br/>
-<% @local_resource_categories.each do |local_resource_category| %>
-    <% next if local_resource_category.local_resources.empty? %>
-    <div class="row">
-      <div class="large-8 radius large-centered columns grey">
-        <div class="row title dark-grey">
-          <div class="large-12 columns expand">
-            <p><span class="toggle">-</span> <%= local_resource_category.name %></p>
-          </div>
-        </div>
-        <div class="row content">
+<%= form_tag search_local_resources_path do %>
+  <div class="row space-bottom">
+    <div class="large-8 large-centered columns small=12">
+      <fieldset>
+        <legend>Filter</legend>
+        <div class="row">
           <div class="small-12 columns">
-            <% local_resource_category.local_resources.each do |local_resource| %>
-                <strong><%= local_resource.business_name %></strong><br/>
-                <% unless local_resource.phone.blank? %>
-                    <span class="ui-icon ui-icon-contact icon"></span><%= number_to_phone(local_resource.phone, area_code: true) %><br/>
-                <% end %>
-                <% unless local_resource.address.blank? %>
-                    <span class="ui-icon ui-icon-pin-s icon"></span><%= link_to local_resource.address.oneline_summary,
-                                                                                "https://www.google.com/maps/place/#{local_resource.address.oneline_summary}" %>
-                    <br/>
-                <% end %>
-                <% unless local_resource.email.blank? %>
-                    <span class="ui-icon ui-icon-mail-closed icon"></span><%= mail_to local_resource.email %><br/>
-                <% end %>
-                <% unless local_resource.url.blank? %>
-                    <span class="ui-icon ui-icon-home icon"></span><%= link_to 'Website', local_resource.url, :target => '_blank' %><br/>
-                <% end %>
-                <%= link_to('Edit', edit_local_resource_path(local_resource)) if current_user.has_access?(PERM_RW_RESOURCE) %> |
-                <%= link_to('Delete', local_resource, :method => :delete, :data => {:confirm => 'Are you sure?'}) if current_user.has_access?(PERM_RW_RESOURCE) %><br/>
-                <% if not local_resource.equal? local_resource_category.local_resources.last %>
-                    <hr/>
-                <% end %>
-            <% end %>
+            <input id="search" autocomplete="off" onkeyup="App.Local_Resources.updateLocalResourceSearch(this);"
+                   type="text"
+                   size="30"
+                   name="search[term]"
+                   placeholder="Business Name"
+                   value="<%= @search_string %>"/>
           </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="small-12 columns">
+            <%= collection_check_boxes :search, :local_resource_categories, LocalResourceCategory.all, :id, :name, {}, {checked: "checked", onchange: "App.Local_Resources.updateLocalResourceSearch(this);"} %>
+          </div>
+        </div>
+      </fieldset>
     </div>
-    <br/>
+  </div>
 <% end %>
+<div id="results" class="large-12 columns">
+  <%= render "local_resources/search_results" %>
+</div>

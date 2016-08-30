@@ -3,10 +3,10 @@
 # Table name: inventory_items
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)
+#  name       :string
 #  quantity   :integer
-#  barcode    :string(255)
-#  unit       :string(255)
+#  barcode    :string
+#  unit       :string
 #  created_at :datetime
 #  updated_at :datetime
 #

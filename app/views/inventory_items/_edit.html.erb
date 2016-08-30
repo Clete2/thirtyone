@@ -4,11 +4,11 @@
 
 <div class="row">
   <div class="left">
-    <button class="tiny" onclick="$('#edit_inventory_item_<%= @inventory_item.id %>').submit();">Save</button>
-    <button class="tiny" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</button>
+    <a class="button medium" onclick="$('#edit_inventory_item_<%= @inventory_item.id %>').submit();">Save</a>
+    <a class="button medium" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</a>
   </div>
 <div class="right">
-  <button class="tiny" onclick="if ( confirm('Are you sure you want to completely remove <%= @inventory_item.name %> from your inventory?') ) {
+  <a class="button medium" onclick="if ( confirm('Are you sure you want to completely remove <%= @inventory_item.name %> from your inventory?') ) {
           var request = $.ajax({
                   url: '<%= inventory_item_path(@inventory_item.id) %>',
                   type: 'DELETE',
@@ -20,6 +20,6 @@
           request.fail(function( jqXHR, textStatus) {
                   alert('Delete failed with message: ' + textStatus);
            });
-          }">Remove from Inventory</button>
+          }">Remove from Inventory</a>
 </div>
 </div>

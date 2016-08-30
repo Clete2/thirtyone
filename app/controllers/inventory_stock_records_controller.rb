@@ -64,7 +64,8 @@ class InventoryStockRecordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_inventory_stock_record
-      @inventory_stock_record = InventoryStockRecord.find(params[:id])
+      @inventory_stock_record = InventoryStockRecord.find_by(id: params[:id])
+      redirect_to inventory_stock_records_url unless @inventory_stock_record
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

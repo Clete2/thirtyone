@@ -1,0 +1,24 @@
+<div style="margin-top:20px;" class="row">
+  <div class="small-12 medium-9 large-8 columns small-centered">
+    <div class="searchbox">
+      <div id="searcharea">
+        <h3>Search/Add Household</h3>
+        <div class="row">
+          <div class="large-8 columns">
+            <input id="search" onkeyup="App.Household.updateHouseholdSearch(this);" type="text" size="30" name="search" placeholder="Name, Address, etc" value="" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <button type="button" onclick="App.Household.newHouseholdAjax('<%= new_household_url %>');" class="button medium">New Household</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <%= render 'search_results', person_select: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

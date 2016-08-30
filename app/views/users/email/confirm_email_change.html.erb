@@ -1,17 +1,11 @@
 <div class="row">
-  <% if @errors.any? %>
+  <% if @errors and @errors.any? %>
       <div class="small-12 columns red-text center-block" style="margin-top:20px;">
         <div id="error_explanation" class="center-block" style="margin-left:auto;  margin-right:auto;">
           <h2>The following error(s) occured trying to confirm your email change:</h2>
           <ul>
-            <% if @errors.any? %>
-                <% if @errors %>
-                    <% @errors.each do |msg| %>
-                        <li><%= msg %></li>
-                    <% end %>
-                <% end %>
-            <% else %>
-                <li>Unknown</li>
+            <% @errors.each do |msg| %>
+                <li><%= msg %></li>
             <% end %>
           </ul>
         </div>
@@ -25,8 +19,8 @@
         <% end %>
       </div>
   <% else %>
-    <div class="small-12 columns text-center green-text">
+      <div class="small-12 columns text-center green-text">
         <h1 class="green-text">Your email change has been confirmed!</h1>
-    </div>
-      <% end %>
+      </div>
+  <% end %>
 </div>

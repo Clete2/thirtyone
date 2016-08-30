@@ -16,6 +16,8 @@
             <tr>
                 <th>Name</th>
                 <th>Quantity</th>
+                <th>Default Household Limit</th>
+                <th>Limit Reset (days)</th>
                 <th>Unit</th>
                 <th>Barcode</th>
             </tr>
@@ -27,6 +29,8 @@
             <tr class="row-link" onclick="$('#editInventoryModal').foundation('reveal', 'open', {url: '<%= edit_inventory_item_path(inventory_item.id) %>', data: {ajax: true}});">
                 <td><%= inventory_item.name %></td>
                 <td><%= inventory_item.quantity %></td>
+                <td><%= inventory_item.default_limit %></td>
+                <td><%= inventory_item.limit_reset_after_days %></td>
                 <td><%= inventory_item.unit %></td>
                 <td><%= inventory_item.barcode %></td>
             </tr>
@@ -37,7 +41,7 @@
 
     <br>
 
-    <button onclick="$('#editInventoryModal').foundation('reveal', 'open', {url: '<%= new_inventory_item_path %>', data: {ajax: true}});">New Item</button>
+    <a class="button medium" onclick="$('#editInventoryModal').foundation('reveal', 'open', {url: '<%= new_inventory_item_path %>', data: {ajax: true}});">New Item</a>
 
   </div>
 </div>

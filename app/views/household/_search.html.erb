@@ -11,13 +11,16 @@
       </div>
       <div class="row">
         <div class="large-12 columns">
-          <button type="button" onclick="App.Household.newHouseholdAjax('<%= new_household_url %>');" class="button tiny">New Household</button>
+          <%= link_to "New Household", {action: "new"}, class: "medium button" %>
         </div>
       </div>
-
       <div class="row">
         <div class="large-12 columns">
-          <%= render 'search_results' %>
+          <% if defined? action %>
+            <%= render 'search_results', action: action %>
+          <% else %>
+            <%= render 'search_results' %>
+          <% end %>
         </div>
       </div>
     </div>

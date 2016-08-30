@@ -1,4 +1,4 @@
-<br />
+<br/>
 <div class="row">
   <div class="large-8 radius large-centered columns grey">
     <div class="row title dark-grey">
@@ -16,8 +16,8 @@
                   <%= @person.household.address.line2 %><br/>
               <% end %>
               <%= @person.household.address.city_state_zip %>
-              <% else %>
-          <i>No address on file</i>
+          <% else %>
+              <i>No address on file</i>
           <% end %>
         </p>
       </div>
@@ -25,33 +25,52 @@
         <p>
           <strong>Phone</strong><br/>
           <% if @person.phone %>
-            <%= @person.phone %>
+            <%=  number_to_phone(@person.phone, area_code: true, extension: @person.phone_ext) %>
           <% else %>
-            <i>No phone on file</i>
+              <i>No phone on file</i>
           <% end %>
         </p>
       </div>
       <div class="small-12 columns">
         <p>
           <strong>Email</strong><br/>
-          <%= @person.email %><% if @person.has_pending_email_change? %><i> (Pending change to: <%= @person.user.pending_email %>)</i><% end %>
+          <%= @person.email %>
+          <% if @person.user and @person.user.has_pending_email_change? %><i> (Pending change to: <%= @person.user.pending_email %>)</i>
+          <% end %>
         </p>
       </div>
       <% if @person.user %>
           <div class="small-12 columns">
             <p>
               <strong>User Roles</strong><br/>
-              <% @roles.each do |role| %>
-                  <% if @person.user.roles.include?(role) %>
-                      &#10003; <%= role.name %>
-                  <% else %>
-                      <span class="grey">&#10007; <%= role.name %></span>
+              <% if @person.user and @person.user.roles %>
+                  <% @person.user.roles.each do |role| %>
+                      <% if @person.user.roles.include?(role) %>
+                          &#10003; <%= role.name %>
+                      <% else %>
+                          <span class="grey">&#10007; <%= role.name %></span>
+                      <% end %>
+                      <br/>
                   <% end %>
-                  <br/>
+              <% else %>
+                  User has no roles.
               <% end %>
             </p>
           </div>
       <% end %>
+
+      <% if @person.notes %>
+          <div class="small-12 columns">
+            <p>
+              <strong>Notes</strong><br/>
+              <% @person.notes.each do |n| %>
+                <span style="font-style:italic"><%= NoteType.find(n.note_type_id).name %>: </span>
+                <%= n.note %><br/>
+              <% end %>
+            </p>
+          </div>
+      <% end %>
+
     </div>
   </div>
 </div>
@@ -67,7 +86,7 @@
       <% if @person.household %>
           <%= render :partial => '/household/show' %>
       <% else %>
-         <div class="large-12 columns"><i>No household information</i></div>
+          <div class="large-12 columns"><i>No household information</i></div>
       <% end %>
     </div>
   </div>
@@ -76,9 +95,9 @@
 
 <div class="row space-above collapse">
   <div class="large-8 radius large-centered columns">
-    <%= link_to('Edit', edit_person_path(@person), :class => 'button tiny') if current_user and current_user.has_access?(PERM_RW_PERSON) %>
+    <%= link_to('Edit', edit_person_path(@person), :class => 'button medium') if current_user and current_user.has_access?(PERM_RW_PERSON) %>
 
-    <%= link_to 'New Visit', new_visit_path(:person_id => @person, :host_id => current_user.person.id), :class => 'button tiny' %>
+    <%= link_to 'New Visit', new_visit_path(:person_id => @person, :host_id => current_user.person.id), :class => 'button medium' %>
   </div>
 </div>
 

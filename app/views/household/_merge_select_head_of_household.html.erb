@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="small-12 columns">
+    <label><h5 <% if household.errors.keys.include?(:person) %>class="red-text"<% end %>>Head of Household</h5></label>
+  </div>
+</div>
+
+<% household.members.each do |person| %>
+    <div class="row <% if household.errors.keys.include?(:person) %>red-text<% end %>">
+      <div class="small-1 columns">
+        <input type="radio" name="head_id"
+                <% if defined?(default) and household.person_id == person.id %>
+                  checked="checked"
+                <% end %>
+               value="<%= person.id %>" />
+      </div>
+      <div class="small-11 columns">
+        <%= person.fullname %>
+      </div>
+    </div>
+<% end %>

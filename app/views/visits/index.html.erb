@@ -1,29 +1,22 @@
-<h1>Listing visits</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Person</th>
-      <th>Host</th>
-      <th>Visit Date</th>
-      <th colspan="3">Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @visits.each do |visit| %>
-      <tr>
-        <td><%= @people.where(id: visit.person_id).to_a.first.fullname %></td>
-        <td><%= @users.where(id: visit.host_id).to_a.first.name %></td>
-        <td><%= visit.visit_date %></td>
-        <td><%= link_to 'Show', visit %></td>
-        <td><%= link_to 'Edit', edit_visit_path(visit) %></td>
-        <td><%= link_to 'Destroy', visit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Visit', new_visit_path %>
+<div class="row" style="position: relative;">
+  <div class="medium-12 columns">
+    <h1 class="page-header" style="display: inline-block;"><%= @filter ? "Today's" : 'Active' %> Visits</h1>&nbsp;<%= link_to @filter ? 'show active' : 'show all', @filter ? visits_path : visits_path(show: :today) %>
+  </div>
+</div>
+<div class="row table-header">
+  <div class="medium-3 columns">
+    Visitor
+  </div>
+  <div class="medium-3 columns">
+    Host
+  </div>
+  <div class="medium-3 columns end">
+    Check in time
+  </div>
+</div>
+<%= render @visits %>
+<div class="row" style="margin-top: 20px;">
+  <div class="medium-3 columns end">
+    <%= link_to 'New Visit', new_visit_path, class: 'button' %>
+  </div>
+</div>

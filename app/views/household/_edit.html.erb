@@ -1,13 +1,15 @@
+<div class="row">
 <%= form_for @household do |h| %>
     <div class="field">
       <div class="small-12 columns">
-        <label for="household_name">Household Name</label>
-        <input disabled="disabled" type="text" value="<%= @household.name %>" />
+        <label class="required" for="household_name">Household Name</label>
+        <input disabled="disabled" type="text" value="<% if not @household.new_record? %><%= @household.name %><% end %>" />
       </div>
+    </div>
       <div class="small-12 columns">
         <%= fields_for :address, @household.address do |a| %>
             <div class="field">
-              <label for="household_address_line1">Address Line 1</label>
+              <label class="required" for="household_address_line1">Address Line 1</label>
               <%= a.text_field :line1 %>
             </div>
             <div class="field">
@@ -15,22 +17,19 @@
               <%= a.text_field :line2 %>
             </div>
             <div class="field">
-              <label for="household_address_city">City</label>
+              <label class="required" for="household_address_city">City</label>
               <%= a.text_field :city %>
             </div>
             <div class="field">
-              <label for="household_address_state">State</label>
-              <%# TODO: Should not be person_id. Look into using collection_select instead. %>
-              <select name="person_id">
-                <%= options_from_collection_for_select(@all_states, :id, :name) %>
-              </select>
+              <label class="required" for="household_address_state">State</label>
+              <%= a.collection_select :state_id, State.all, :id, :name %>
             </div>
             <div class="field">
-              <label for="household_address_zip">Zipcode</label>
+              <label class="required" for="household_address_zip">Zipcode</label>
               <%= a.text_field :zip %>
             </div>
         <% end %>
       </div>
-    </div>
     <input type="hidden" id="person_household_id" name="person[household_id]" value="" />
 <% end %>
+</div>

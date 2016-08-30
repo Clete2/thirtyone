@@ -1,1 +1,22 @@
-<%= render 'show' %>
+<div class="row space-above">
+  <div class="large-10 large-offset-2 small-12 columns">
+    <h1>The <%= @household.name %> Household</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="large-8 small-12 columns small-centered">
+      <%= render 'show' %>
+    </div>
+</div>
+<div class="row space-above">
+  <div class="large-6 small-12 large-offset-2 columns">
+    <%= link_to('Edit', edit_household_path(@household), :class => 'button medium') if current_user and current_user.has_access?(PERM_RW_PERSON) %>
+    <%= link_to('Delete', @household, :class => 'button medium', method: :delete, data: { confirm: "This will delete the household and ALL members of the household.\n\nAre you sure?" }) if current_user and current_user.has_access?(PERM_RW_PERSON) %>
+  </div>
+  <div class="large-4 large-pull-2 columns text-right">
+    <%= link_to('Merge Household', merge_select_households_path(@household), :class => 'button medium') if current_user and current_user.has_access?(PERM_RW_PERSON) %>
+  </div>
+  <div id="selectHouseholdModal" class="reveal-modal" data-reveal>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+</div>

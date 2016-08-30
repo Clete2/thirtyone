@@ -1,0 +1,14 @@
+<div class="row table-row">
+  <div class="medium-3 columns">
+    <%= visit.person.fullname %>
+  </div>
+  <div class="medium-3 columns">
+    <%= visit.host.fullname %>
+  </div>
+  <div class="medium-3 columns">
+    <%= visit.start_at.strftime('%m/%d/%Y %I:%M %p') %>
+  </div>
+  <div class="medium-1 columns end">
+    <%= link_to 'Edit', edit_visit_path(visit) %>
+  </div>
+</div>

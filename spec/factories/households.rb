@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: households
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  person_id  :integer
+#  created_at :datetime
+#  updated_at :datetime
+#  address_id :integer
+#
+
 FactoryGirl.define do
   factory :household do
     address

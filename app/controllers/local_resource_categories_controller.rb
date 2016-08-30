@@ -66,7 +66,8 @@ class LocalResourceCategoriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_local_resource_category
-      @local_resource_category = LocalResourceCategory.find(params[:id])
+      @local_resource_category = LocalResourceCategory.find_by(id: params[:id])
+      redirect_to local_resource_categories_url unless @local_resource_category
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

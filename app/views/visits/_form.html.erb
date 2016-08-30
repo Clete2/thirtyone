@@ -27,5 +27,6 @@
 
   <div class="actions">
     <%= f.submit class: 'button' %>
+    <%= link_to 'Cancel', request.referer.present? ? request.referer : default_path, class: 'button secondary' %>
   </div>
 <% end %>

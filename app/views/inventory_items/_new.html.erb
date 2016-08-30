@@ -2,7 +2,7 @@
 
 <%= render 'form' %>
 
-<button id="save_button" class="tiny" onclick="
+<a id="save_button" class="button medium" onclick="
         var form = $('#new_inventory_item');
         var request = $.ajax({
             url: form.attr('action'),
@@ -16,9 +16,9 @@
         request.fail(function( jqXHR, textStatus) {
                 alert('Delete failed with message: ' + textStatus);
                 });
-">Save</button>
+">Save</a>
 
-<button class="tiny" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</button>
+<a class="button medium" onclick="$('#editInventoryModal').foundation('reveal', 'close');">Cancel</a>
 
 <script>
     $("#new_inventory_item").on('keypress', 'input', function(e) {

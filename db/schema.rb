@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110010534) do
-
+ActiveRecord::Schema.define(version: 20160604024620) do
   create_table "addresses", force: :cascade do |t|
     t.string   "line1"
     t.string   "line2"
@@ -31,13 +30,28 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.datetime "updated_at"
   end
 
+  create_table "household_limits", force: :cascade do |t|
+    t.integer  "inventory_item_id"
+    t.integer  "household_id"
+    t.integer  "quantity"
+    t.integer  "reset_after_days"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "household_limits", ["household_id"], name: "index_household_limits_on_household_id"
+  add_index "household_limits", ["inventory_item_id"], name: "index_household_limits_on_inventory_item_id"
+
   create_table "households", force: :cascade do |t|
     t.string   "name"
     t.integer  "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "address_id"
+    t.datetime "deleted_at"
   end
+
+  add_index "households", ["deleted_at"], name: "index_households_on_deleted_at"
 
   create_table "inventory_items", force: :cascade do |t|
     t.string   "name"
@@ -46,28 +60,22 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.string   "unit"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "inventory_order_items", force: :cascade do |t|
-    t.integer  "orderid"
-    t.integer  "itemid"
-    t.integer  "quantity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "inventory_orders", force: :cascade do |t|
-    t.integer  "peopleid"
-    t.integer  "enteredby"
-    t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "default_limit"
+    t.integer  "limit_reset_after_days"
   end
 
   create_table "inventory_stock_records", force: :cascade do |t|
     t.integer  "itemid"
     t.integer  "quantity"
     t.date     "received"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inventory_visit_items", force: :cascade do |t|
+    t.integer  "visitid"
+    t.integer  "itemid"
+    t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -91,6 +99,7 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.integer  "address_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "phone_ext"
   end
 
   create_table "note_types", force: :cascade do |t|
@@ -104,6 +113,13 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.integer  "note_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "notes_households", force: :cascade do |t|
+    t.integer  "note_id"
+    t.integer  "household_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "notes_people", force: :cascade do |t|
@@ -120,6 +136,13 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.datetime "updated_at"
   end
 
+  create_table "notes_work_schedules", force: :cascade do |t|
+    t.integer  "note_id"
+    t.integer  "work_schedule_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
   create_table "people", force: :cascade do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -128,7 +151,11 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.datetime "updated_at"
     t.integer  "household_id"
     t.string   "email"
+    t.datetime "deleted_at"
+    t.string   "phone_ext"
   end
+
+  add_index "people", ["deleted_at"], name: "index_people_on_deleted_at"
 
   create_table "roles", force: :cascade do |t|
     t.datetime "created_at"
@@ -187,7 +214,6 @@ ActiveRecord::Schema.define(version: 20151110010534) do
     t.integer  "user_id"
     t.datetime "start_at"
     t.datetime "end_at"
-    t.string   "note"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

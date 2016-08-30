@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: households
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  person_id  :integer
+#  created_at :datetime
+#  updated_at :datetime
+#  address_id :integer
+#
+
 require 'rails_helper'
 
 describe Household do
@@ -15,4 +27,10 @@ describe Household do
     expect(household.members.size).to eq(4)
   end
 
+  it 'should be able to have notes' do
+    household = build(:household)
+    note   = build(:note)
+    household.notes.push(note)
+    expect(household.notes).to include(note)
+  end
 end

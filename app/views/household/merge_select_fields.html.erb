@@ -1,0 +1,67 @@
+<div class="row space-bottom">
+  <div class="small-12 columns">
+    <h1>Merge Households</h1>
+    <span>Select the information from the household you would like to preserve.</span>
+  </div>
+</div>
+ <%= form_for(@household, url: merge_households_path) do |f| %>
+
+    <div class="row space-bottom">
+      <div class="small-12 columns">
+        <% if @household.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@household.errors.count, "error") %> prohibited these households from being merged:</h2>
+            <ul>
+              <% @household.errors.each do |attr, msg| %>
+                  <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="row space-bottom">
+      <div class="small-6 columns">
+        <%= render 'merge_household_name', household: @household %>
+      </div>
+      <div class="small-6 columns">
+        <%= render 'merge_household_name', household: @merge_household %>
+      </div>
+    </div>
+    <div class="row space-bottom">
+      <div class="small-6 columns">
+        <%= render 'merge_household_address', household: @household, default: true %>
+      </div>
+      <div class="small-6 columns">
+        <%= render 'merge_household_address', household: @merge_household %>
+      </div>
+    </div>
+
+
+    <div class="row space-bottom">
+      <div class="small-6 columns">
+        <%= render 'merge_household_members', household: @household %>
+      </div>
+      <div class="small-6 columns">
+        <%= render 'merge_household_members', household: @merge_household %>
+      </div>
+    </div>
+
+
+    <div class="row space-bottom">
+      <div class="small-6 columns">
+        <%= render 'merge_select_head_of_household', household: @household, default: true %>
+      </div>
+      <div class="small-6 columns">
+        <%= render 'merge_select_head_of_household', household: @merge_household %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <input type="submit" class="medium button" value="Merge" />
+      </div>
+    </div>
+  <% end %>
+</div>
+

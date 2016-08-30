@@ -2,4 +2,4 @@
 
 <p>You can confirm your account email through the link below:</p>
 
-<p><%= link_to 'Confirm my account', confirm_email_change_url(@resource.person, confirmation_token: @resource.reset_email_token) %></p>
+<p><%= link_to 'Confirm my account', confirm_email_change_url(@resource, confirmation_token: @resource.reset_email_token) %></p>

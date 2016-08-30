@@ -16,8 +16,16 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :quantity %><br>
+    <%= f.label :quantity, "Quantity in stock" %><br>
     <%= f.number_field :quantity %>
+  </div>
+  <div class="field">
+    <%= f.label :default_limit, "Default limit per household" %><br>
+    <%= f.number_field :default_limit %>
+  </div>
+  <div class="field">
+    <%= f.label :limit_reset_after_days, "Days before limit is reset for household" %><br>
+    <%= f.number_field :limit_reset_after_days %>
   </div>
   <div class="field">
     <%= f.label :barcode %><br>

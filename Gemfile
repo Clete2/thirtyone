@@ -39,6 +39,8 @@ gem 'figaro'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'paranoia', '~> 2.0'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -81,4 +83,5 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-ionrangeslider'
   gem 'rails-assets-fullcalendar'
   gem 'rails-assets-jquery.inputmask', '~> 3.1.63'
+  gem 'rails-assets-validatejs'
 end

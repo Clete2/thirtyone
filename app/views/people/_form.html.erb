@@ -1,5 +1,8 @@
 <%= form_for(@person, :html => {:name => 'new_person'}) do |f| %>
-    <% if @person.errors.any? or @errors.any? %>
+    <% if @is_user %>
+        <h5>Want to edit user attributes? Go to the <a href="<%= edit_user_url(@person.user) %>">edit user</a> page.</h5>
+    <% end %>
+    <% if @person.errors.any? %>
         <div id="error_explanation">
           <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
 
@@ -7,55 +10,34 @@
             <% @person.errors.full_messages.each do |msg| %>
                 <li><%= msg %></li>
             <% end %>
-            <% if @errors %>
-                <% @errors.each do |msg| %>
-                    <li><%= msg %></li>
-                <% end %>
-            <% end %>
           </ul>
         </div>
     <% end %>
+    <div style="color: red;">* denotes required field</div>
     <div class="field">
-      <label for="person_firstname">First Name</label>
+      <label class="required" for="person_firstname">First Name</label>
       <%= f.text_field :firstname, :required => true %>
     </div>
     <div class="field">
-      <label for="person_lastname">Last Name</label>
+      <label class="required" for="person_lastname">Last Name</label>
       <%= f.text_field :lastname, :required => true %>
     </div>
     <div class="field">
       <%= f.label :email %>
-      <% if @person.has_pending_email_change? %>
-          <% if @person.user.pending_email_valid? %>
-              <div id="pending_email_change_div" style="border: 1px solid #ccc; padding:10px 10px 0px 10px;">
-                <div class="row">
-                  <div class="small-12 columns">
-                    <p>
-                      This user has a pending email change from <i><%= @person.user.email %></i> to <i><%= @person.user.pending_email %></i>.
-                      A confirmation email has been sent to <i><%= @person.user.pending_email %></i>.  You can can either cancel this change or re-send the confirmation link to this email.
-                    </p>
-                  </div>
-                </div>
-                <div class="row" style="margin-top:20px;">
-                  <div class="small-12 medium-6 columns">
-                    <button class="button tiny center-block" type="button" onclick="resendEmailConfirmation();" >Resend Confirmation Email</button>
-                  </div>
-                  <div class="small-12 medium-6 columns">
-                    <button class="button tiny" type="button" onclick="cancelEmailChange();">Cancel Email Change</button>
-                  </div>
-                </div>
-              </div>
-              <%= f.email_field :email, style: "display: none;" %>
-          <% else %>
-              <%= f.email_field :email, :value => @person.user.pending_email %>
-          <% end %>
-      <% else %>
-          <%= f.email_field :email %>
+      <% if @is_user %>
+          User e-mail must be edited from the <a href="<%= edit_user_path(@person.user) %>">edit user</a> page.
       <% end %>
+      <%= f.email_field :email, :disabled => @is_user %>
     </div>
-    <div class="field">
-      <%= f.label :phone %>
-      <%= f.text_field :phone %>
+    <div class="phone_field">
+      <div class="phone_left">
+        <span><%= f.label :phone %></span>
+        <span><%= f.text_field :phone %></span>
+      </div>
+      <div class="phone_right">
+        <span><%= f.label :phone_ext %></span>
+        <span><%= f.text_field :phone_ext %></span>
+      </div>
     </div>
     <h3>Household</h3>
     <div id="selectHouseholdModal" class="reveal-modal" data-reveal>
@@ -63,74 +45,80 @@
     </div>
 
     <div class="field">
-      <div id="select_household_message" class="field">
-        You must select a household to associate this person with.  If this is the first visit from a household, you can create a new one.<br />
+      <div id="select_household_message" class="field <%= 'hide' if @person.household %>">
+        You must select a household to associate this person with. If this is the first visit from a household, you can create a new one.<br/>
       </div>
       <button type="button" id="select_or_create_household_button" onclick="$('#selectHouseholdModal')
           .foundation('reveal',
           'open',
-          {url: '<%= households_path  %>',
+          {url: '<%= select_households_url  %>',
               data: {ajax: true},
               complete: function(xhr, status) {
                   $('#selectHouseholdModal')
                       .append('<a class=\'close-reveal-modal\'>&#215;</a>');
-                  } });" class="tiny button" >Select or Create Household</button>
-    </div>
+
+            } });" class="medium button" >Select or Create Household</button>
+      </div>
     <div id="household_div" class="row">
-      <%= if @person.household
-            @household = @person.household
-            if @household.new_record?
-              render 'household/new'
-            else
-              render 'household/show'
-            end
+      <%=
+        if @person.household
+          @household = @person.household
+          if @person.household.new_record?
+            render 'household/new'
+          else
+            render 'household/show'
           end
+        end
       %>
     </div>
     <h3>Allow User to Login</h3>
     <div>Do you want to allow this user to login as a volunteer?
-      <%= radio_button_tag(:create_user, :yes, ( !!@person.user || params[:create_user] == 'yes' ) )  %><label for="create_user_yes">Yes</label>
-      <%= radio_button_tag(:create_user, :no, ( !@person.user  && params[:create_user] != 'yes' ) ) %><label for="create_user_no">No</label>
+      <%= radio_button_tag(:create_user, :yes, (!!@person.user || params[:create_user] == 'yes')) %><label for="create_user_yes">Yes</label>
+      <%= radio_button_tag(:create_user, :no, (!@person.user && params[:create_user] != 'yes')) %><label for="create_user_no">No</label>
     </div>
-    <div id="user_info" style="<%= 'display:none;' if not @person.user and params[:create_user] != 'yes'%>" >
-      <strong>Select one or more roles for the user</strong>
-      <div class="12-small columns">
-        <% @roles.each do |role| %>
-            <div>
-              <input id="role_checkbox_<%= role.id %>" <%= ' checked="checked" ' if @selected_roles.include?(role)  %>type="checkbox" name="roles[]" value="<%= role.id %>" /><label for="role_checkbox_<%= role.id %>"><%= role.name %></label>
-            </div>
+    <% if redirect_to_url %>
+        <input type="hidden" name="redirect_to_url" value="<%= redirect_to_url %>"/>
+    <% end %>
+
+    <h3>Notes</h3>
+    <% @person.notes.each do |n| %>
+        <div class="row note">
+          <div class="small-12 columns">
+            <%= f.fields_for :notes, n do |nf| %>
+                <%= nf.collection_select :note_type_id, NoteType.all, :id, :name %>
+                <%= nf.text_area :note %>
+                <%= nf.check_box :_destroy, class: "delete-note-checkbox" %>
+                <%= nf.label :_destroy, "Delete Note" %>
+            <% end %>
+          </div>
+        </div>
+    <% end %>
+
+    <h4>New Note</h4>
+    <div class="row space-above space-bottom">
+      <div class="small-12 columns new-note">
+        <%= f.fields_for :notes, @person.notes.build do |nf| %>
+            <%= nf.collection_select :note_type_id, NoteType.all, :id, :name %>
+            <%= nf.text_area :note %>
         <% end %>
       </div>
     </div>
-    <div class="field">
-      <%= f.submit class: 'button' %>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <div class="field left">
+          <%= f.submit class: 'medium button' %>
+        </div>
+        <div class="right">
+          <button class="medium button" onclick="window.location='<%= redirect_to_url ? redirect_to_url : people_url %>';">
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
 
 <% end %>
 <script>
-  $(document).ready(function() {
-    $('input[type=radio][name=create_user]').change(function() {
-      if (this.value == 'yes') {
-        $('#user_info').show();
-      }
-      else if (this.value == 'no') {
-        $('#user_info').hide();
-      }
-
-      $("input[type=checkbox][roletype=admin]").change(function () {
-        var shouldDisable = $(this)[0].checked;
-        $("input[type=checkbox][roletype=standard]").each(function () {
-          $(this)[0].disabled = shouldDisable;
-        });
-      });
-      if ($("input[type=checkbox][roletype=admin]")[0].checked) {
-        $("input[type=checkbox][roletype=standard]").each(function () {
-          $(this)[0].disabled = true;
-        });
-      }
-    });
-  });
-
   var validator = new FormValidator('new_person', [{
     name: 'person[firstname]',
     display: 'First Name',
@@ -139,7 +127,7 @@
     name: 'person[lastname]',
     display: 'Last Name',
     rules: 'required'
-  }], function(errors, event) {
+  }], function (errors, event) {
     if (errors.length > 0) {
       event.preventDefault();
       var errorString = '';
@@ -157,38 +145,4 @@
       }, 1000);
     }
   });
-
-
-  <% if not @person.id.nil? %>
-
-  function resendEmailConfirmation() {
-    $.ajax({
-      url: '<%= send_confirmation_email_url %>',
-      method: 'POST',
-      accept: 'applicaiton/json'
-    }).done(function (data, textStatus, jqXHR) {
-      $("#notice_content").html("Confirmation email sent");
-      $("#notice").show().delay(3000).fadeOut(1000);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      $("#error_content").html("Error sending confirmation email");
-      $("#error").show().delay(3000).fadeOut(1000);
-    });
-  }
-
-  function cancelEmailChange() {
-    $.ajax({
-      url: '<%= cancel_pending_email_change_url %>',
-      method: 'DELETE'
-    }).done(function (data, textStatus, jqXHR) {
-      $("#notice_content").html("Pending email change was canceled");
-      $("#notice").show().delay(3000).fadeOut(1000);
-      $('#person_email').show();
-      $('#person_email').removeAttr("disabled");
-      $('#pending_email_change_div').hide();
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      $("#error_content").html("Error canceling pending email change");
-      $("#error").show().delay(3000).fadeOut(1000);
-    });;
-  }
-  <% end %>
 </script>

@@ -15,4 +15,12 @@
 class Visit < ActiveRecord::Base
   has_and_belongs_to_many :notes
   belongs_to :person
+  belongs_to :host, class_name: 'Person'
+
+  scope :active, -> { where(end_at: nil)}
+  scope :today, -> { where(visit_date: Date.today) }
+
+  before_create do
+    self.start_at = DateTime.now
+  end
 end

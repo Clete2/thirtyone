@@ -124,6 +124,8 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
+    paranoia (2.1.5)
+      activerecord (~> 4.0)
     parser (2.3.0.6)
       ast (~> 2.2)
     powerpack (0.1.1)
@@ -158,6 +160,7 @@ GEM
     rails-assets-jquery.inputmask (3.1.63)
       rails-assets-jquery (>= 1.7)
     rails-assets-moment (2.11.2)
+    rails-assets-validatejs (1.5.1)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -262,12 +265,14 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails (>= 3.0)
   jquery-ui-rails
+  paranoia (~> 2.0)
   pundit
   quiet_assets
   rails (~> 4)
   rails-assets-fullcalendar!
   rails-assets-ionrangeslider!
   rails-assets-jquery.inputmask (~> 3.1.63)!
+  rails-assets-validatejs!
   rspec-rails
   rubocop (~> 0.37.2)
   sass-rails (~> 4.0.0)

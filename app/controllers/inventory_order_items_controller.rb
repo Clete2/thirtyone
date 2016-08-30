@@ -64,7 +64,8 @@ class InventoryOrderItemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_inventory_order_item
-      @inventory_order_item = InventoryOrderItem.find(params[:id])
+      @inventory_order_item = InventoryOrderItem.find_by(id: params[:id])
+      redirect_to inventory_order_items_url unless @inventory_order_item
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,1 +1,19 @@
-<%= render 'new' %>
+<div class="row">
+  <div class="large-8 small-12 columns small-centered">
+    <h1>Create a Household</h1>
+  </div>
+    <%= form_for(@household) do |form| %>
+      <div clas="large-2 columns"></div>
+      <div class="large-8 small-12 columns small-centered">
+      <%= render :partial => 'household/new', :locals => {:f => form} %>
+      </div>
+      <div clas="large-2 columns"></div>
+      <div clas="large-2 columns"></div>
+      <div class="large-8 small-12 columns small-centered">
+         <div class="small-12 columns">
+           <%= form.submit 'Create Household', class: 'medium button' %>
+         </div>
+      </div>
+      <div clas="large-2 columns"></div>
+<% end %>
+</div>

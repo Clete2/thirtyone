@@ -3,10 +3,10 @@
 # Table name: addresses
 #
 #  id         :integer          not null, primary key
-#  line1      :string(255)
-#  line2      :string(255)
-#  city       :string(255)
-#  zip        :string(255)
+#  line1      :string
+#  line2      :string
+#  city       :string
+#  zip        :string
 #  state_id   :integer
 #  created_at :datetime
 #  updated_at :datetime
@@ -16,9 +16,18 @@ class Address < ActiveRecord::Base
   belongs_to :state
 
   validates_presence_of :line1, :city, :zip
+  validates_format_of :zip, :with => /\d{5}/
 
   def city_state_zip
     "#{self.city}, #{self.state.abbv} #{self.zip}"
+  end
+
+  def line2
+    if not self[:line2].nil?
+      return self[:line2]
+    else
+      return ''
+    end
   end
 
   def oneline_summary
@@ -36,6 +45,7 @@ class Address < ActiveRecord::Base
   end
 
   def self.most_used_state
-    State.find(Address.group(:state_id).order('count_state_id DESC').limit(1).count(:state_id).keys.first || 1)
+    state_id = Address.group(:state_id).order('count_state_id DESC').limit(1).count(:state_id).keys.first || 1
+    State.find_by(id: state_id)
   end
 end

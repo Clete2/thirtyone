@@ -12,7 +12,6 @@ class RolesController < ApplicationController
   # GET /role/1
   # GET /role/1.json
   def show
-    @role = Role.find(params[:id])
   end
 
   # GET /roles/new
@@ -32,73 +31,32 @@ class RolesController < ApplicationController
 
   # POST /roles/bulk
   def bulk_assign_create
-    params[:users].each do |userId|
-      @user = User.find(userId)
+    users = confirm_bulk_assign('users', User)
+    roles = confirm_bulk_assign('roles', Role)
 
-      params[:roles].each do |roleId|
-        @role = Role.find(roleId)
-        @user.roles << @role
-        @user.save
-      end
+    if users && roles
+      users.each{ |user| user.roles = roles }
+      flash[:notice] = 'Users updated successfully'
+    else
+      flash[:notice] = 'An error occurred. Try again'
     end
 
-    # TODO: Handle error scenarios
-    flash[:notice] = 'Users updated successfully'
-    bulk_assign_new
-    render :bulk_assign_new
+    redirect_to action: 'bulk_assign_new'
   end
 
   # POST /roles
   # POST /roles.json
   def create
     @role = Role.new(role_params)
-    aRPrm = params[:PermGrp]
-    iPmssn = 0
-    if aRPrm == nil
-      respond_to do |format|
+    respond_to do |format|
+      set_role_permission
+      if @role.permissions != 0 && @role.save
+        format.html { redirect_to @role, notice: 'Role was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @role }
+      else
         flash[:notice] = " <<< Please Enter a name and select at least one checkbox. >>> "
         format.html { render action: 'new' }
         format.json { render json: @role.errors, status: :unprocessable_entity }
-      end
-
-    else
-      # iTgl = 1
-      # iROprm = 0
-      # iRWprm = 0
-      # aRPrm.each { |p|
-      #   if iTgl == 1
-      #     iTgl = 2
-      #     iROprm = p.to_i
-      #     iPmssn+=p.to_i
-      #   else
-      #     iTgl = 1
-      #     iRWprm = p.to_i
-      #     iPmssn+=p.to_i
-      #   end
-      #
-      #   iROWttl = iROprm + iRWprm
-      #   if iROWttl == 3 or iROWttl == 12 or iROWttl == 48 or iROWttl == 192 or iROWttl == 768 or iROWttl == 3072
-      #     iPmssn-=iROprm
-      #   end
-      # }
-      aRPrm.each { |p| iPmssn+=p.to_i }
-      # aRPrm = iPmssn
-
-      respond_to do |format|
-        # success = @role.save
-        # format.html { success ? (redirect_to @role, notice: 'Role was successfully created.') : (render action: 'new') }
-
-        # @role.name = params['role']['name']
-        # @role.permissions = aRPrm
-        @role.permissions = iPmssn
-
-        if @role.save
-          format.html { redirect_to @role, notice: 'Role was successfully created.' }
-          format.json { render action: 'show', status: :created, location: @role }
-        else
-          format.html { render action: 'new' }
-          format.json { render json: @role.errors, status: :unprocessable_entity }
-        end
       end
     end
   end
@@ -106,13 +64,8 @@ class RolesController < ApplicationController
   # PATCH/PUT /roles/1
   # PATCH/PUT /roles/1.json
   def update
-    aRPrm = params[:PermGrp]
-    iPmssn = 0
-    aRPrm.each { |p| iPmssn+=p.to_i }
-
     respond_to do |format|
-      @role.permissions = iPmssn
-
+      set_role_permission
       if @role.update(role_params)
         format.html { redirect_to @role, notice: 'Role was successfully updated.' }
         format.json { head :no_content }
@@ -136,7 +89,18 @@ class RolesController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_role
-    @role = Role.find(params[:id])
+    @role = Role.find_by(id: params[:id])
+    redirect_to action: 'index' unless @role
+  end
+
+  def set_role_permission
+    @role.permissions = params[:PermGrp].inject(0){ |sum, num| sum + num.to_i } if params[:PermGrp]
+  end
+
+  def confirm_bulk_assign(type, klass)
+    return unless params[type]
+    result = params[type].map{ |id| klass.find_by(id: id) }
+    result.reject!(&:nil?).empty? ? nil : result
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

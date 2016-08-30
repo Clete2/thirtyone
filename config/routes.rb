@@ -1,7 +1,13 @@
 Thirtyone::Application.routes.draw do
 
   resources :local_resource_categories
-  resources :local_resources
+
+  resources :local_resources do
+    collection do
+      get :search
+    end
+  end
+
   resources :visits
 
   resources :user_roles
@@ -22,7 +28,9 @@ Thirtyone::Application.routes.draw do
 
   root  'static_pages#index'
 
-  resources :user, as: "users", controller: "users", via: :all
+  # If user refreshes the user 'update' page after getting an error, we want to send them to the show person page
+  get '/user/:id'  => 'users#show_person'
+  resources :user, controller: 'users', only: [:index, :edit, :update]
   resources :role, as: "roles", controller: "roles", via: :all
 
   match '/roles/bulk', :controller => 'roles', :action => 'bulk_assign_new', via: :get
@@ -33,7 +41,12 @@ Thirtyone::Application.routes.draw do
   resources :households, controller: 'household' do
     collection do
       get :search
+      get :select
+      get '/:id/merge'            => 'household#merge_select',        as: 'merge_select'
+      get '/:id/merge/:merge_id'  => 'household#merge_select_fields', as: 'merge_select_fields'
+      patch ':id/merge/:merge_id' => 'household#merge',               as: 'merge'
     end
+    resources :addresses
   end
 
   resources :event, as: "events", controller: "event", via: :all
@@ -46,9 +59,9 @@ Thirtyone::Application.routes.draw do
     end
   end
 
-  delete '/people/:id/email_change'     => 'people#cancel_pending_email_change', as: 'cancel_pending_email_change'
-  post '/people/:id/email_confirmation' => 'people#send_confirmation_email', as: 'send_confirmation_email'
-  get '/people/:id/email_confirmation'  => 'people#confirm_email_change', as: 'confirm_email_change'
+  delete '/user/:id/email_change'     => 'users#cancel_pending_email_change', as: 'cancel_pending_email_change'
+  post '/user/:id/email_confirmation' => 'users#send_confirmation_email', as: 'send_confirmation_email'
+  get '/user/:id/email_confirmation'  => 'users#confirm_email_change', as: 'confirm_email_change'
 
   match '/people/new', :controller => 'people', :action => 'new', via: :post
   # The priority is based upon order of creation: first created -> highest priority.

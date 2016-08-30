@@ -1,0 +1,17 @@
+<tr class="fields">
+    <td>
+      <div class="small-6 columns">
+        <label>Iventory Item</label>
+      </div>
+      <div class="small-6 columns">
+        <label>Quantity Override</label>
+      </div>
+      <div class="small-6 columns">
+        <%= f.collection_select :inventory_item_id, InventoryItem.all, :id, :name %>
+      </div>
+      <div class="small-6 columns">
+        <%= f.text_field :quantity %>
+      </div>
+    </td>
+    <td><%= link_to_remove_fields "Remove", f %></td>
+</tr>

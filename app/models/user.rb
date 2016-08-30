@@ -2,20 +2,23 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  created_at             :datetime
-#  updated_at             :datetime
-#  email                  :string(255)      default(""), not null
-#  encrypted_password     :string(255)      default(""), not null
-#  reset_password_token   :string(255)
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :string(255)
-#  last_sign_in_ip        :string(255)
-#  person_id              :integer
+#  id                        :integer          not null, primary key
+#  created_at                :datetime
+#  updated_at                :datetime
+#  email                     :string           default(""), not null
+#  encrypted_password        :string           default(""), not null
+#  reset_password_token      :string
+#  reset_password_sent_at    :datetime
+#  remember_created_at       :datetime
+#  sign_in_count             :integer          default(0), not null
+#  current_sign_in_at        :datetime
+#  last_sign_in_at           :datetime
+#  current_sign_in_ip        :string
+#  last_sign_in_ip           :string
+#  person_id                 :integer
+#  reset_email_token         :string
+#  reset_email_token_sent_at :datetime
+#  pending_email             :string
 #
 
 class User < ActiveRecord::Base
@@ -28,6 +31,8 @@ class User < ActiveRecord::Base
   has_many :user_roles
   has_many :roles, :through => :user_roles
   belongs_to :person, autosave: true
+
+  accepts_nested_attributes_for :user_roles, allow_destroy: true
 
   @send_confirmation = false
 
@@ -66,15 +71,14 @@ class User < ActiveRecord::Base
 
   def confirm_email_change
     if has_pending_email_change?
-      self[:email] = self[:pending_email]
-      cancel_pending_email_change
+      cancel_pending_email_change(true)
     end
   end
 
-  def cancel_pending_email_change
-    self[:reset_email_token]         = nil
-    self[:reset_email_token_sent_at] = nil
-    self[:pending_email]             = nil
+  def cancel_pending_email_change(change_email = false)
+    values = {reset_email_token: nil, reset_email_token_sent_at: nil, pending_email: nil}
+    values[:email] = pending_email if change_email
+    update(values)
   end
 
   def should_send_confirmation_email?

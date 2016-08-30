@@ -12,15 +12,15 @@
         <li class="divider"></li>
         <li class="<%= "active" if current_page?(people_path) %>"><a href="<%= people_path %>">Start Serving</a></li>
         <li class="divider"></li>
+        <li class="<%= "active" if current_page?(households_path) %>"><a href="<%= households_path %>">Households</a></li>
+        <li class="divider"></li>
         <li class="<%= "active" if current_page?(calendar_index_path) %>"><a href="<%= calendar_index_path %>">Scheduling</a></li>
-      <!--
         <li class="divider"></li>
         <li class="<%= "active" if current_page?(inventory_items_path) %>"><a href="<%= inventory_items_path %>">Inventory</a></li>
-        -->
         <li class="divider"></li>
         <li><a href="#">Reports</a></li>
         <li class="divider"></li>
-        <li class="<%= 'active' if current_page?(users_path) %>"><a href="<%= users_path %>">Users</a></li>
+        <li class="<%= 'active' if current_page?(user_index_path) %>"><a href="<%= user_index_path %>">Users</a></li>
         <li class="divider"></li>
         <li class="<%= 'active' if current_page?(local_resources_path) %>"><%= link_to 'Local Resources', local_resources_path %></li>
         <li class="divider"></li>
@@ -38,7 +38,7 @@
     <ul class="right">
         <li class="divider"></li>
         <% if current_user.person %>
-          <li><a href="<%= url_for person_path(current_user.person.id) %>/edit">My Account</a></li>
+          <li><a href="<%= edit_user_path(current_user.id) %>">My Account</a></li>
         <% end %>
         <li class="divider"></li>
         <li><%= link_to "Logout", destroy_user_session_path, :method => :delete %></li>

@@ -4,3 +4,13 @@
 .icon {
   display: inline-block;
 }
+
+.radius-top {
+  border-top-left-radius:3px;
+  border-top-right-radius:3px;
+}
+
+.radius-bottom {
+  border-bottom-left-radius:3px;
+  border-bottom-right-radius:3px;
+}

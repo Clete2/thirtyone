@@ -1,46 +1,109 @@
 <%= form_for(@user) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this person from being saved:</h2>
+    <% if @user.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this person from being saved:</h2>
 
-      <ul>
-      <% @user.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <label for="user_name">Name</label>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <label for="user_email">Email</label>
-    <%= f.text_field :email %>
-  </div>
-    <div class="field">
-      <%= f.label :password, "Password (Optional, leave blank to remain unchanged)" %>
-      <%= f.password_field :password, autofocus: true, autocomplete: "off" %>
-    </div>
-    <div class="field">
-      <%= f.label :password_confirmation, "Confirm Password" %>
-      <%= f.password_field :password_confirmation, autofocus: true, autocomplete: "off" %>
-    </div>
-  <div class="actions">
-    <div class="left">
-        <%= f.submit 'Save', :class => 'button tiny' %>
-        <button type="button" class="button tiny" onclick="window.location='<%= @back_url %>';">Cancel</button>
-    </div>
-
+          <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
     <% end %>
-<% if @user.id? %>
-    <div class="right">
-      <%= button_to "Delete", {:controller => :users,
-                               :action => 'destroy', :id => @user.id },
-                    :method => :delete,
-                    :class => "button tiny",
-                    :onclick => "return confirm('Are you sure you want to delete this user?');" %>
+    <h5>Want to edit person attributes? Go to the <a href="<%= edit_person_url(@user.person) %>">edit person</a> page.</h5>
+    <div class="field">
+      <%= f.label :email %>
+      <% if @user.has_pending_email_change? %>
+          <% if @user.pending_email_valid? %>
+              <div id="pending_email_change_div" style="border: 1px solid #ccc; padding:10px 10px 0px 10px;">
+                <div class="row">
+                  <div class="small-12 columns">
+                    <p>
+                      This user has a pending email change from <i><%= @user.email %></i> to <i><%= @user.pending_email %></i>.
+                      A confirmation email has been sent to <i><%= @user.pending_email %></i>. You can can either cancel this change or re-send the
+                      confirmation link to this email.
+                    </p>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                  <div class="small-12 medium-6 columns">
+                    <button class="button medium center-block" type="button" onclick="resendEmailConfirmation();">Resend Confirmation Email</button>
+                  </div>
+                  <div class="small-12 medium-6 columns">
+                    <button class="button medium" type="button" onclick="cancelEmailChange();">Cancel Email Change</button>
+                  </div>
+                </div>
+              </div>
+              <%= f.email_field :email, style: 'display: none;' %>
+          <% else %>
+              <%= f.email_field :email, :value => @user.pending_email %>
+          <% end %>
+      <% else %>
+          <%= f.email_field :email %>
+      <% end %>
     </div>
-  </div>
+    <div class="field">
+      <% unless @can_edit_password %>
+        <strong>You cannot edit the password because you do not have sufficient permissions</strong>
+      <% end %>
+      <%= f.label :password, 'Password (Optional, leave blank to remain unchanged)' %>
+      <%= f.password_field :password, autofocus: true, autocomplete: 'off', disabled: !@can_edit_password %>
+    </div>
+    <div class="field">
+      <%= f.label :password_confirmation, 'Confirm Password' %>
+      <%= f.password_field :password_confirmation, autofocus: true, autocomplete: 'off', disabled: !@can_edit_password %>
+    </div>
+    <div class="field">
+      <strong>Select one or more roles for the user</strong>
+      <div class="12-small columns">
+        <div>
+          <% if @disable_roles %>
+              <div>Only admins can edit user permissions.</div>
+          <% end %>
+          <%= f.collection_check_boxes :role_ids, Role.all, :id, :name, checked: @user.roles.map(&:id) do |b| %>
+              <%= b.label do %>
+                  <%= b.check_box(:disabled => @disable_roles) + b.text %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="left">
+        <%= f.submit 'Update User', :class => 'button medium' %>
+      </div>
+    </div>
 <% end %>
+
+<script type="text/javascript">
+  function resendEmailConfirmation() {
+    $.ajax({
+      url: '<%= send_confirmation_email_url %>',
+      method: 'POST',
+      accept: 'application/json'
+    }).done(function (data, textStatus, jqXHR) {
+      $("#notice_content").html("Confirmation email sent");
+      $("#notice").show().delay(3000).fadeOut(1000);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      $("#error_content").html("Error sending confirmation email");
+      $("#error").show().delay(3000).fadeOut(1000);
+    });
+  }
+
+  function cancelEmailChange() {
+    $.ajax({
+      url: '<%= cancel_pending_email_change_url %>',
+      method: 'DELETE'
+    }).done(function (data, textStatus, jqXHR) {
+      $("#notice_content").html("Pending email change was cancelled");
+      $("#notice").show().delay(3000).fadeOut(1000);
+      $('#user_email').show();
+      $('#user_email').removeAttr("disabled");
+      $('#pending_email_change_div').hide();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      $("#error_content").html("Error canceling pending email change");
+      $("#error").show().delay(3000).fadeOut(1000);
+    });
+    ;
+  }
+</script>

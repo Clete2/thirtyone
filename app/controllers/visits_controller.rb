@@ -4,9 +4,13 @@ class VisitsController < ApplicationController
   # GET /visits
   # GET /visits.json
   def index
-    @visits = Visit.order("visit_date").all
-    @people = Person.all
-    @users = User.all
+    # default to showing only active visits (those without an end_at value)
+    @filter = params[:show]
+    if params[:show] && params[:show] == 'today'
+      @visits = Visit.today.order(start_at: :desc)
+    else
+      @visits = Visit.active.order(start_at: :desc)
+    end
   end
 
   # GET /visits/1
@@ -68,7 +72,8 @@ class VisitsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_visit
-      @visit = Visit.find(params[:id])
+      @visit = Visit.find_by(id: params[:id])
+      redirect_to visits_url unless @visit
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

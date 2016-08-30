@@ -38,19 +38,6 @@ class PersonPolicy < ApplicationPolicy
     index?
   end
 
-  def cancel_pending_email_change?
-    @user.has_access?(PERM_RW_PERSON)
-  end
-
-  def send_confirmation_email?
-    @user.has_access?(PERM_RW_PERSON)
-  end
-
-  # Email confirmations should not require a login, so we will always authorize.
-  # The token in the URL is the real authorization mechanism.
-  def confirm_email_change?
-    true
-  end
   # def scope
   #   Pundit.policy_scope!(user, Person)
   # end

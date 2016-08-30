@@ -22,5 +22,28 @@
 //= require app.visits
 //= require inventory_items
 //= require app.work_schedule.js
-//= require calendar
-//= require validate.min
+//= require app.calendar.js
+//= require validatejs
+
+function remove_fields(link) {
+    $(link).prev("input[type=hidden]").val("1");
+    $(link).closest(".fields").hide();
+}
+
+function add_fields(link, association, content, parent_selector) {
+    if ( parent_selector != null ) {
+        parent = $(parent_selector);
+    } else {
+        parent = $(link).parent().parent();
+    }
+    var new_id = new Date().getTime();
+    var regexp = new RegExp("new_" + association, "g")
+    $(parent).append(content.replace(regexp, new_id));
+}
+
+$(function () {
+    $('.center-vertical').each(function (index) {
+        var row = $(this).closest('.row');
+        $(this).height($(row).height());
+    });
+});
