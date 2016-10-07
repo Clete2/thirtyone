@@ -118,10 +118,14 @@ class PeopleController < ApplicationController
     respond_to do |format|
       if psv.process(@person)
         @person.user.send_new_account_instructions unless(@person.user.nil? || is_update)
-        # Redirect to the edit user page if they are creating a new user
+
         url = edit_user_path(@person.user) if params[:create_user] == 'yes'
-        url ||= params[:redirect_to_url] || @person
-        msg = is_update ? 'updated' : 'created'
+
+        # Redirect to the person, unless we're creating a new household
+        is_update ? url ||= params[:redirect_to_url] || @person : url ||= @person.household
+
+        msg = is_update ? "updated" : "created"
+
         format.html { redirect_to url, notice: "Person was successfully #{msg}." }
         if is_update
           format.json { head :no_content }
